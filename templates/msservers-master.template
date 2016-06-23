@@ -55,7 +55,8 @@
                         "WSFCNode2PrivateIP3",
                         "SPInstanceType",
                         "OOSInstanceType",
-                        "ELBConfiguration"
+                        "ELBConfiguration",
+                        "WAPADFSInstanceType"
                     ]
                 },
                 {
@@ -282,6 +283,9 @@
                 },
                 "WSFCNode2PrivateIP3": {
                     "default": "WSFC Node 2 Private IP Address 3"
+                },
+                "WAPADFSInstanceType": {
+                    "default": "Amazon EC2 instance type for the WAP and ADFS Servers"
                 }
             }
         }
@@ -696,6 +700,14 @@
             "Default": "m4.xlarge",
             "AllowedValues": [
                 "m4.xlarge"
+            ]
+        },
+        "WAPADFSInstanceType": {
+            "Description": "Amazon EC2 instance type for the WAP and ADFS Servers",
+            "Type": "String",
+            "Default": "c4.2xlarge",
+            "AllowedValues": [
+                "c4.2xlarge"
             ]
         }
     },
@@ -1181,6 +1193,84 @@
                     },
                     "LyncISOImageURI": {
                         "Ref": "LyncISOImageURI"
+                    }
+                }
+            }
+        },
+        "WAPADFSStack": {
+            "Type": "AWS::CloudFormation::Stack",
+            "DependsOn": "ADStack",
+            "Properties": {
+                "TemplateURL": "https://s3.amazonaws.com/quickstart-reference/microsoft/wapadfs/latest/templates/Template_1_WAP_ADFS_2012R2.template",
+                "Parameters": {
+                    "ADServer1PrivateIp": {
+                        "Ref": "ADServer1PrivateIP"
+                    },
+                    "ADServer2PrivateIp": {
+                        "Ref": "ADServer2PrivateIP"
+                    },
+                    "ADServerNetBIOSName1": {
+                        "Ref": "ADServer1NetBIOSName"
+                    },
+                    "ADServerNetBIOSName2": {
+                        "Ref": "ADServer2NetBIOSName"
+                    },
+                    "InstanceType": {
+                        "Ref": "WAPADFSInstanceType"
+                    },
+                    "DomainAdminPassword": {
+                        "Ref": "DomainAdminPassword"
+                    },
+                    "DomainAdminUser": {
+                        "Ref": "DomainAdminUser"
+                    },
+                    "DomainDNSName": {
+                        "Ref": "DomainDNSName"
+                    },
+                    "DomainMemberSGID": {
+                        "Fn::GetAtt": [
+                            "ADStack",
+                            "Outputs.DomainMemberSGID"
+                        ]
+                    },
+                    "DomainNetBIOSName": {
+                        "Ref": "DomainNetBIOSName"
+                    },
+                    "KeyPairName": {
+                        "Ref": "KeyPairName"
+                    },
+                    "VPC": {
+                        "Fn::GetAtt": [
+                            "ADStack",
+                            "Outputs.VPC"
+                        ]
+                    },
+                    "PrivateSubnet1Id": {
+                        "Fn::GetAtt": [
+                            "ADStack",
+                            "Outputs.PrivateSubnet1Id"
+                        ]
+                    },
+                    "PrivateSubnet2Id": {
+                        "Fn::GetAtt": [
+                            "ADStack",
+                            "Outputs.PrivateSubnet2Id"
+                        ]
+                    },
+                    "PublicSubnet1Id": {
+                        "Fn::GetAtt": [
+                            "ADStack",
+                            "Outputs.PublicSubnet1Id"
+                        ]
+                    },
+                    "PublicSubnet2Id": {
+                        "Fn::GetAtt": [
+                            "ADStack",
+                            "Outputs.PublicSubnet2Id"
+                        ]
+                    },
+                    "VPCCIDR": {
+                        "Ref": "VPCCIDR"
                     }
                 }
             }
