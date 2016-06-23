@@ -226,5 +226,8 @@
     {
         "ParameterKey": "WSFCNode2PrivateIP3",
         "ParameterValue": "10.0.64.102"
-    }
+    },
+    {   "ParameterKey": "WAPADFSInstanceType",
+        "ParameterValue": "c4.2xlarge"
+    }    
 ]
